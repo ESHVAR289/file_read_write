@@ -1,4 +1,4 @@
-package com.einfoplanet.fileio
+package com.einfoplanet.fileiolib
 
 import org.junit.Test
 

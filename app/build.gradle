@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -39,7 +40,18 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'com.google.android.material:material:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    implementation project(path: ':fileio')
+    implementation project(path: ':fileiolib')
+    implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
+//    implementation 'com.amplifyframework:core:1.0.0'
+//    implementation 'com.amplifyframework:aws-storage-s3:1.0.0'
+//    implementation 'com.amplifyframework:aws-auth-cognito:1.0.0'
+//    implementation 'com.amazonaws:aws-android-sdk-s3:2.16.12'
+//    implementation 'com.amazonaws:aws-android-sdk-cognito:2.16.12'
+//    implementation 'com.amazonaws:aws-android-sdk-cognitoidentityprovider:2.16.12'
+    implementation 'com.google.firebase:firebase-storage-ktx:19.1.1'
+    implementation 'com.google.firebase:firebase-database-ktx:19.3.1'
+    implementation "androidx.work:work-runtime-ktx:2.3.4"
+    implementation "androidx.concurrent:concurrent-futures:1.0.0"
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'

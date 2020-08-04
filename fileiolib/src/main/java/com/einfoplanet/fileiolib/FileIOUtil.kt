@@ -1,4 +1,4 @@
-package com.einfoplanet.fileio
+package com.einfoplanet.fileiolib
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -26,6 +26,9 @@ class FileIOUtil(private val mContext: Context) {
     val internalCacheDirectory: String
         get() = mContext.cacheDir.absolutePath
 
+    val internalStorageDirectory: String
+        get() = mContext.getExternalFilesDir(null)!!.absolutePath
+
     fun createDirectory(path: String): Boolean {
         val directory = File(path)
         if (directory.exists()) {
@@ -47,7 +50,7 @@ class FileIOUtil(private val mContext: Context) {
     }
 
     fun createFile(path: String, fileName: String): Boolean {
-        val file = File(path + File.separator + fileName)
+        val file = File(path, fileName)
         return when {
             !file.exists() -> {
                 file.createNewFile()
@@ -140,7 +143,7 @@ class FileIOUtil(private val mContext: Context) {
     }
 
     private fun getFiles(
-        dir: String?
+        dir: String
     ): List<File>? {
         val file = File(dir)
         var files: Array<File?>? = null
@@ -148,11 +151,11 @@ class FileIOUtil(private val mContext: Context) {
         return if (files != null) listOf<File>(*files) else null
     }
 
-    private fun getFile(path: String?): File {
+    fun getFile(path: String): File {
         return File(path)
     }
 
-    fun rename(fromPath: String?, toPath: String?): Boolean {
+    fun rename(fromPath: String, toPath: String): Boolean {
         val file = getFile(fromPath)
         val newFile = File(toPath)
         return file.renameTo(newFile)
@@ -168,7 +171,7 @@ class FileIOUtil(private val mContext: Context) {
         return SizeUnit.readableSizeUnit(length)
     }
 
-    fun getFreeSpace(dir: String?, sizeUnit: SizeUnit): Long {
+    fun getFreeSpace(dir: String, sizeUnit: SizeUnit): Long {
         val statFs = StatFs(dir)
         val availableBlocks: Long
         val blockSize: Long
@@ -216,15 +219,9 @@ class FileIOUtil(private val mContext: Context) {
         val availableBlocks: Long
         val blockSize: Long
         val totalBlocks: Long
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            availableBlocks = statFs.availableBlocks.toLong()
-            blockSize = statFs.blockSize.toLong()
-            totalBlocks = statFs.blockCount.toLong()
-        } else {
-            availableBlocks = statFs.availableBlocksLong
-            blockSize = statFs.blockSizeLong
-            totalBlocks = statFs.blockCountLong
-        }
+        availableBlocks = statFs.availableBlocksLong
+        blockSize = statFs.blockSizeLong
+        totalBlocks = statFs.blockCountLong
         val usedBytes = totalBlocks * blockSize - availableBlocks * blockSize
         return usedBytes / sizeUnit.inBytes()
     }
@@ -296,9 +293,7 @@ class FileIOUtil(private val mContext: Context) {
         val isExternalWritable: Boolean
             get() {
                 val state = Environment.getExternalStorageState()
-                return if (Environment.MEDIA_MOUNTED == state) {
-                    true
-                } else false
+                return Environment.MEDIA_MOUNTED == state
             }
     }
 
